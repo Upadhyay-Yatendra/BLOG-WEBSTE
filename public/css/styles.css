@@ -3,41 +3,147 @@
     padding-bottom: 70px;
 }
 
-.navbar {
-    padding-top: 15px;
-    padding-bottom: 15px;
-    border: 0;
-    border-radius: 0;
-    margin-bottom: 0;
-    font-size: 12px;
-    letter-spacing: 5px;
+body, html {
+	margin: 0;
+	font-family: Roboto, Arial, helvetica, sans-serif;
 }
 
-.navbar-nav li a:hover {
-    color: #1abc9c !important;
+a {
+	outline: none;
 }
 
-.navbar-nav>li {
-    float: left;
-    position: relative;
+.navbar-container {
+	text-align: center;
+	background-color: #009688;
+	box-shadow: 0px -20px 5px 20px #333333;
+	padding: 10px;
+	font-size: 0;
 }
 
-.navbar-light .navbar-nav .active a::after {
-    border-bottom: 5px solid #5bc0eb;
-    bottom: -10px;
-    content: " ";
-    left: 0;
-    position: absolute;
-    right: 0;
+.navbar-container ul {
+    margin: 0;
+	padding: 0;
+	text-align: right;
+	display: inline-block;
+	vertical-align: middle;
 }
+
+.navbar-container ul li {
+	display: inline-block;
+	font-size: 16px;
+}
+
+.navbar-container ul li a {
+	color: #ffffff;
+	text-decoration: none;
+	display: inline-block;	
+	padding: 10px;
+	transition: color 0.5s;
+}
+
+.navbar-container ul li .underline {
+	height: 3px;
+	background-color: transparent;
+	width: 0%;
+	transition: width 0.2s, background-color 0.5s;
+	margin: 0 auto;
+}
+
+.navbar-container ul li.active-link .underline {
+	width: 100%;
+	background-color: white;
+}
+
+.navbar-container ul li:hover .underline {
+	background-color: white;
+	width: 100%;
+}
+
+
+.navbar-container ul li:active a {
+	transition: none;
+	color: rgba(255,255,255,0.76);
+}
+
+.navbar-container ul li:active .underline {
+	transition: none;
+	background-color: rgba(255,255,255,0.76);
+}
+
+/* STYLING THE CONTACT SECTION */
+.contact {
+	background-color: #f7f7f7;
+	padding: 50px;
+	text-align: center;
+  }
+  
+  .contact p {
+	font-size: 1.5em;
+	margin-bottom: 50px;
+  }
+  
+  .contact ul {
+	list-style: none;
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: center;
+  }
+  
+  .contact li {
+	margin-right: 20px;
+	margin-bottom: 20px;
+  }
+  
+  .contact a {
+	text-decoration: none;
+	color: #333;
+	display: flex;
+	align-items: center;
+  }
+  
+  .contact i {
+	font-size: 1.5em;
+	margin-right: 10px;
+  }
+  
+  /* Add hover effect to links */
+  .contact a:hover {
+	color: #007bff;
+  }
+  
+  /* Responsive styles */
+  @media (max-width: 767px) {
+	.contact {
+	  padding: 30px;
+	}
+	
+	.contact ul{
+		align-content: flex-start;
+		/* margin-left: 0; */
+		display: flex;
+		flex-direction: column;
+	}
+	.contact p {
+	  font-size: 1.2em;
+	  margin-bottom: 30px;
+	}
+	
+	.contact li {
+	  margin-right: 0;
+	  margin-bottom: 10px;
+	}
+  }
+
+  /* 1111111111111111111111111111111111111111111111 */
 
 .footer-padding {
     padding-bottom: 60px;
 }
 
 .footer {
-    position: absolute;
+    position: fixed;
     text-align: center;
+	margin-top: 10rem;
     bottom: 0;
     width: 100%;
     height: 60px;

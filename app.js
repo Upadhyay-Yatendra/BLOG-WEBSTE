@@ -3,26 +3,41 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const ejs = require("ejs");
+const mongoose = require('mongoose');
 var _ = require('lodash');
-
-const homeStartingContent = "Lacus vel facilisis volutpat est velit egestas dui id ornare. Semper auctor neque vitae tempus quam. Sit amet cursus sit amet dictum sit amet justo. Viverra tellus in hac habitasse. Imperdiet proin fermentum leo vel orci porta. Donec ultrices tincidunt arcu non sodales neque sodales ut. Mattis molestie a iaculis at erat pellentesque adipiscing. Magnis dis parturient montes nascetur ridiculus mus mauris vitae ultricies. Adipiscing elit ut aliquam purus sit amet luctus venenatis lectus. Ultrices vitae auctor eu augue ut lectus arcu bibendum at. Odio euismod lacinia at quis risus sed vulputate odio ut. Cursus mattis molestie a iaculis at erat pellentesque adipiscing.";
-const aboutContent = "Hac habitasse platea dictumst vestibulum rhoncus est pellentesque. Dictumst vestibulum rhoncus est pellentesque elit ullamcorper. Non diam phasellus vestibulum lorem sed. Platea dictumst quisque sagittis purus sit. Egestas sed sed risus pretium quam vulputate dignissim suspendisse. Mauris in aliquam sem fringilla. Semper risus in hendrerit gravida rutrum quisque non tellus orci. Amet massa vitae tortor condimentum lacinia quis vel eros. Enim ut tellus elementum sagittis vitae. Mauris ultrices eros in cursus turpis massa tincidunt dui.";
-const contactContent = "Scelerisque eleifend donec pretium vulputate sapien. Rhoncus urna neque viverra justo nec ultrices. Arcu dui vivamus arcu felis bibendum. Consectetur adipiscing elit duis tristique. Risus viverra adipiscing at in tellus integer feugiat. Sapien nec sagittis aliquam malesuada bibendum arcu vitae. Consequat interdum varius sit amet mattis. Iaculis nunc sed augue lacus. Interdum posuere lorem ipsum dolor sit amet consectetur adipiscing elit. Pulvinar elementum integer enim neque. Ultrices gravida dictum fusce ut placerat orci nulla. Mauris in aliquam sem fringilla ut morbi tincidunt. Tortor posuere ac ut consequat semper viverra nam libero.";
+const homeStartingContent = "Hello and welcome to my blog! <br>My name is <strong> Yatendra Upadhyay</strong>, and I'm a college student and web developer with a passion for technology and programming.<br><br>This blog is my way of sharing my journey with you. <br>Whether you're a fellow student, a seasoned developer, or simply someone who's curious about the world of tech, I hope you'll find something here that inspires you or helps you in your own journey. <br>From tutorials and how-to guides to reflections on the latest trends and developments in the industry, my aim is to provide you with valuable insights and practical tips that you can use to further your own goals.<br><br>So, if you're ready to dive into the world of tech with me, let's get started! <br>Don't hesitate to reach out if you have any questions or just want to say hi. <br>I'd love to hear from you!";
+const aboutContent = "<p>Hi there, I'm <strong> Yatendra Upadhyay</strong> - a college student and web developer with a passion for building beautiful, functional websites. I've always loved tinkering with computers, and now I'm studying computer science to turn my hobby into a career. When I'm not studying or coding, you can find me playing basketball or hanging out with my friends.</p><br><p>I started this blog as a way to share my experiences and insights with other students and developers who are just starting out. Here, you'll find everything from coding tutorials and tips to personal reflections and stories. Thanks for stopping by, and feel free to reach out if you have any questions or just want to say hi!</p>";
+const contactContent = '<section class="contact"><p>Want to get in touch? Feel free to reach out via email or on social media:</p><ul><li><a href="mailto:yupadhyayyk@gmail.com"><i class="fa fa-envelope"></i> Email</a></li><li><a href="https://www.linkedin.com/in/yatendra-upadhyay-33b84a202/"><i class="fa fa-linkedin"></i> LinkedIn</a></li><li><a href="https://twitter.com/YATENDRAPANDIT6"><i class="fa fa-twitter"></i> Twitter</a></li><li><a href="https://www.instagram.com/upadhyay__yatendra/"><i class="fa fa-instagram"></i> Instagram</a></li></ul></section>';
 
 const app = express();
 
 app.set('view engine', 'ejs');
 
 app.use(bodyParser.urlencoded({ extended: true }));
+
 app.use(express.static("public"));
 
-let posts = [];
+mongoose.connect('mongodb://127.0.0.1:27017/BlogDB')
+  .then(() => console.log('Connected!'))
+  .catch((error) => console.log("\n" + error))
+
+const postsSchema = new mongoose.Schema({
+  title: String,
+  body: String
+});
+const Post = mongoose.model("Post", postsSchema);
+// let posts = [];
 app.get("/", (req, res) => {
   // res.send("<h1>HOME</h1>");
-  res.render('home', {
-    content: homeStartingContent,
-    posts: posts
-  });
+  Post.find()
+    .then(FoundPosts => {
+
+      res.render('home', {
+        content: homeStartingContent,
+        posts: FoundPosts
+      });
+    })
+    .catch(err => console.log("\n" + err))
 })
 
 app.get("/about", (req, res) => {
@@ -34,9 +49,7 @@ app.get("/about", (req, res) => {
 
 app.get("/contact", (req, res) => {
   // res.send("<h1>HOME</h1>");
-  res.render('contact', {
-    content: contactContent
-  });
+  res.render('contact');
 })
 
 
@@ -48,44 +61,52 @@ app.get("/compose", (req, res) => {
 
 // using express routing parameters
 app.get("/posts/:id", (req, res) => {
-  let flag = -1;
-  flag = Number(flag);
-  var requestedPost = _.lowerCase(req.params.id); // using lodash to match kebab case
+  // let flag = -1;
+  // flag = Number(flag);
+  var requestedPost =(req.params.id); // using lodash to match kebab case
 
   console.log(requestedPost);
-  posts.forEach(post => {
-    // console.log(post.ti);
-    if (post.title === requestedPost) {
-      // console.log('MATCH FOUND');
-
-      flag = posts.indexOf(post);
-      console.log(posts[flag].title + posts[flag].body);
-    }
-
-  });
-  if (flag != -1) {
-    res.render('post', {
-      heading: posts[flag].title,
-      body: posts[flag].body
+  const query = { _id: requestedPost }
+  Post.find(query)
+    .then(foundPosts => {
+      if (foundPosts.length === 0) {
+        res.send("<h1>NO SUCH EXISTS</h1>")
+      }
+      else {
+        const foundPost = foundPosts[0];
+        console.log(foundPost.title + "\n" + foundPost.body);
+        res.render('post', {
+          heading: foundPost.title,
+          body: foundPost.body
+        });
+      }
+    })
+    .catch(error => {
+      console.log(error);
+      res.send("<h1>ERROR OCCURRED</h1>");
     });
-  }
-  else {
-    console.log("/no match found");
-    res.redirect("/");
-  }
 
-});
+  // console.log(post.ti);
+  // if (post.title === requestedPost) {
+  // console.log('MATCH FOUND');
+
+  // flag = posts.indexOf(post);
+  // console.log(posts[flag].title + posts[flag].body);
+})
+
 app.post("/compose", (req, res) => {
   // let text = req.body.postTitle;
   // console.log(text);
 
-  const post = {
+  const post = new Post({
     title: req.body.postTitle,
     body: req.body.postBody
-  };
-  posts.push(post);
+  });
+  post.save()
+    .then(() => res.redirect("/"))
+    .catch(error => console.log(error))
   // console.log(posts);
-  res.redirect("/");
+
 
 })
 

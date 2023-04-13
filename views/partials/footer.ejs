@@ -1,9 +1,27 @@
-
 </div>
 <div class="footer-padding"></div>
-  <div class="footer">
-    <p>Authored by : Yatendra Upadhyay</p>
-  </div>
+<div class="footer">
+  <p>Authored by : Yatendra Upadhyay</p>
 </div>
+</div>
+<script src="https://code.jquery.com/jquery-3.6.3.min.js"
+  integrity="sha256-pvPw+upLPUjgMXY0G+8O0xUf+/Im1MZjXxxgOcBQBXU=" crossorigin="anonymous"></script>
+<script>
+
+$(document).ready(function () {
+        // Underline to remain in navbar after click using URL
+        jQuery(function ($) {
+          var path = "/" + window.location.pathname.split("/").pop(); // because the 'href' property of the DOM element is the absolute path
+          $('.nav-link').each(function () {
+            if ($(this.children).attr("href") === path) {
+              $(this).addClass('active-link');
+            }
+          });
+        });
+      });
+
+  // console.log(window.location.href);
+</script>
 </body>
+
 </html>
